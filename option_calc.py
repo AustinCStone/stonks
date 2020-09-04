@@ -34,6 +34,33 @@ def plot(exercise_prices, profits, title):
     plt.show()
 
 
+def plot_delta_vs_strike():
+    min_exercise_price = FLAGS.current_price * .5
+    max_exercise_price = FLAGS.current_price * 2.
+    deltas = []
+    exercise_prices = []
+    call = FLAGS.expected_price_movement > 0.
+    for exercise_price in np.linspace(min_exercise_price, max_exercise_price, 1000):
+        current_option_price = black_scholes(FLAGS.current_price, exercise_price,
+                                             FLAGS.risk_free_interest_rate,
+                                             FLAGS.days_to_expiration,
+                                             FLAGS.volatility,
+                                             call=call)
+        current_option_price2 = black_scholes(FLAGS.current_price + .001, exercise_price,
+                                              FLAGS.risk_free_interest_rate,
+                                              FLAGS.days_to_expiration,
+                                              FLAGS.volatility,
+                                              call=call)
+        delta = (current_option_price2 - current_option_price) / .001
+        deltas.append(delta)
+        exercise_prices.append(exercise_price)
+    plt.plot(exercise_prices, deltas)
+    plt.xlabel('strike price')
+    plt.ylabel('delta')
+    plt.title(f'current price: {FLAGS.current_price}')
+    plt.show()
+
+
 def black_scholes(current_price, exercise_price, risk_free_interest_rate,
                   days_to_expiration, volatility, call=True):
     """The black scholes pricing formula."""
@@ -51,6 +78,7 @@ def black_scholes(current_price, exercise_price, risk_free_interest_rate,
         return s * norm.cdf(d1) - x * np.exp(-r * t) * norm.cdf(d2)
     else:
         return x * np.exp(-r * t) * norm.cdf(-d2) - s * norm.cdf(-d1)
+
 
 
 def main(unused):
