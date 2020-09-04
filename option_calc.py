@@ -85,7 +85,8 @@ def main(unused):
 
     print(f'Best exercise price is {best_exercise_price:.2f}, profit is {max_profit * 100:.2f}%.')
     if FLAGS.plot:
-        title = f'S: {FLAGS.current_price}, predicted movement: {FLAGS.expected_price_movement}, time: {FLAGS.days_to_expiration}, v: {FLAGS.volatility}'
+        title = f'S: {FLAGS.current_price}, predicted movement: {FLAGS.expected_price_movement}' + \
+            f', time: {FLAGS.days_to_expiration}, v: {FLAGS.volatility}'
         plot(all_exercise_prices, all_profits, title)
 
 
